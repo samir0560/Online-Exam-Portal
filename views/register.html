@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to left, #f0ebec 0%, #76c6e1 50%, #5bc6bd 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            width: 800px;
+            max-width: 100%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            flex-wrap: wrap;
+        }
+
+        .left-panel,
+        .right-panel {
+            flex: 1 1 50%;
+            padding: 40px;
+        }
+
+        .left-panel {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .left-panel h2 {
+            font-size: 26px;
+            margin-bottom: 15px;
+        }
+
+        .left-panel p {
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            width: 100%;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            border: none;
+            padding: 12px;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 26px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #6e8efb;
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .toggle-form a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .toggle-form a:hover {
+            text-decoration: underline;
+        }
+
+        .homepage-btn {
+            background: linear-gradient(135deg, #6e8efb, #a777e3) !important;
+            margin-top: 15px;
+            display: inline-block;
+            max-width: 200px;
+            text-align: center;
+        }
+
+        .homepage-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* 📱 MOBILE VIEW */
+        @media(max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            /* SIGNUP FIRST */
+            .right-panel {
+                order: 1;
+                padding: 30px 20px;
+            }
+
+            /* SIGNIN BELOW */
+            .left-panel {
+                order: 2;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- SIGNUP FIRST ON MOBILE -->
+        <div class="right-panel">
+            <h2 class="form-title">Create Account</h2>
+            <form action="/register" method="POST" style="max-width: 300px; width: 100%; margin: auto;">
+                <div class="form-group">
+                    <label for="reg-id">ID</label>
+                    <input type="text" id="reg-id" name="id" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-name">Name</label>
+                    <input type="text" id="reg-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">Email</label>
+                    <input type="email" id="reg-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" name="password" required>
+                </div>
+                <button type="submit" class="btn">Register</button>
+            </form>
+
+            <div class="toggle-form">
+                Already have an account? <a href="/login">Sign In</a>
+            </div>
+            <div class="toggle-form">
+                <a href="/" class="btn homepage-btn">Go to Homepage</a>
+            </div>
+        </div>
+
+        <!-- SIGNIN BELOW ON MOBILE -->
+        <div class="left-panel">
+            <h2>Already Registered?</h2>
+            <p>Login to view your dashboard and start learning.</p>
+            <a href="/login" class="btn">Sign In</a>
+        </div>
+
+    </div>
+
+</body>
+</html>

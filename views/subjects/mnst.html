@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MNST Assessment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .quiz-wrapper {
+            width: 100%;
+            min-height: 100vh;
+            padding: 15px;
+            background: linear-gradient(to left, #f0ebec 0%, #76c6e1 50%, #5bc6bd 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .quiz-box {
+            width: 750px;
+            min-height: 400px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+            border-radius: 50px;
+            position: relative;
+        }
+
+        .timer {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background-color: #ff4757;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 30px;
+            font-weight: bold;
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+        }
+
+        .question-count {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .question-count .count {
+            font-size: 25px;
+            font-weight: 800;
+            color: #9307b3;
+        }
+
+        .question-count .count span {
+            color: #6c42ff;
+            font-size: 35px;
+        }
+
+        .question-box {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .question-box .question-number {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #6c42ff;
+            color: #fff;
+            font-size: 40px;
+            height: 40px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .question-box #question {
+            font-size: 20px;
+            font-weight: 500;
+            color: #6e44fe;
+            padding: 10px 15px;
+            border-radius: 10px;
+            box-shadow: rgba(110, 68, 254, 0.45) 0px 4px 12px;
+        }
+
+        .answer-box {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 45px;
+            gap: 35px 15px;
+        }
+
+        .answer-box .box {
+            width: calc(50% - 10px);
+            position: relative;
+        }
+
+        .answer-box .box .answer-number {
+            position: absolute;
+            top: -20px;
+            right: 5%;
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            background-color: #b892ff;
+            width: 60px;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+        }
+
+        .answer-box .box .answer-label {
+            display: flex;
+            align-items: center;
+            background-color: #6c42ff;
+            border: 2px solid #6c42ff;
+            width: 100%;
+            color: #fff;
+            padding: 20px 25px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+        }
+
+        .answer-box .box input:checked~.answer-label {
+            background-color: #fff;
+            color: #6c42ff;
+        }
+
+        .button-box {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .button-box button {
+            background-color: #6c42ff;
+            border: 2px solid #6c42ff;
+            padding: 12px;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 500;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.5s;
+        }
+
+        .button-box button:hover {
+            background-color: #fff;
+            color: #6c42ff;
+        }
+
+        .button-box .submit-btn {
+            display: none;
+        }
+
+        .result-show {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            text-align: center;
+        }
+
+        .result-show a {
+            color: #6c42ff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .quiz-box {
+                width: 95%;
+                border-radius: 30px;
+            }
+
+            .timer {
+                position: static;
+                margin-bottom: 20px;
+                text-align: center;
+                width: fit-content;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .answer-box .box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="quiz-wrapper">
+        <div class="quiz-box" id="quiz">
+            <div class="timer" id="timer">10:00</div>
+            <div class="question-count">
+                <p class="count"><span id="count-question">1</span>/<strong id="total-questions">10</strong></p>
+                <p class="question-title">Question</p>
+            </div>
+            <div class="question-box">
+                <span class="question-number">1</span>
+                <p id="question">Loading question...</p>
+            </div>
+            <div class="answer-box">
+                <div class="box">
+                    <div class="answer-number">A</div>
+                    <input type="radio" name="option" id="first" value="a" required hidden>
+                    <label for="first" class="answer-label">Option A</label>
+                </div>
+                <div class="box">
+                    <div class="answer-number">B</div>
+                    <input type="radio" name="option" id="second" value="b" required hidden>
+                    <label for="second" class="answer-label">Option B</label>
+                </div>
+                <div class="box">
+                    <div class="answer-number">C</div>
+                    <input type="radio" name="option" id="third" value="c" required hidden>
+                    <label for="third" class="answer-label">Option C</label>
+                </div>
+                <div class="box">
+                    <div class="answer-number">D</div>
+                    <input type="radio" name="option" id="fourth" value="d" required hidden>
+                    <label for="fourth" class="answer-label">Option D</label>
+                </div>
+            </div>
+            <div class="button-box">
+                <button type="button" id="prev-question-btn" style="display:none;">Previous</button>
+                <button type="button" class="next-btn" id="next-question-btn">Next Question</button>
+                <button type="button" class="submit-btn" id="submit">Submit Now</button>
+            </div>
+        </div>
+        <div class="result-show" id="result">
+            <h2 id="score">Assessment Results</h2>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "What does MNST stand for?",
+                a: "Mobile Network Security Technology",
+                b: "Modern Network Security Techniques",
+                c: "Mobile Network System Testing",
+                d: "Multi-level Network Security Technology",
+                correct: "a"
+            },
+            {
+                question: "Which protocol is commonly used in MNST?",
+                a: "HTTP",
+                b: "HTTPS",
+                c: "FTP",
+                d: "SMTP",
+                correct: "b"
+            },
+            {
+                question: "What is the primary goal of network security?",
+                a: "To increase network speed",
+                b: "To protect network-accessible resources",
+                c: "To reduce hardware costs",
+                d: "To simplify network configuration",
+                correct: "b"
+            },
+            {
+                question: "Which encryption method is most secure for wireless networks?",
+                a: "WEP",
+                b: "WPA",
+                c: "WPA2",
+                d: "WPA3",
+                correct: "d"
+            },
+            {
+                question: "What does VPN stand for?",
+                a: "Virtual Private Network",
+                b: "Verified Public Network",
+                c: "Virtual Public Network",
+                d: "Verified Private Network",
+                correct: "a"
+            },
+            {
+                question: "Which port does HTTPS typically use?",
+                a: "80",
+                b: "443",
+                c: "8080",
+                d: "22",
+                correct: "b"
+            },
+            {
+                question: "What is a common type of DDoS attack?",
+                a: "Phishing",
+                b: "SQL Injection",
+                c: "SYN Flood",
+                d: "Cross-site Scripting",
+                correct: "c"
+            },
+            {
+                question: "Which authentication method is most secure?",
+                a: "Password",
+                b: "Two-factor authentication",
+                c: "Biometrics",
+                d: "Security questions",
+                correct: "b"
+            },
+            {
+                question: "What does IDS stand for in network security?",
+                a: "Intrusion Detection System",
+                b: "Internet Defense System",
+                c: "Intrusion Defense System",
+                d: "Internet Detection System",
+                correct: "a"
+            },
+            {
+                question: "Which protocol ensures data integrity?",
+                a: "TCP",
+                b: "UDP",
+                c: "IPSec",
+                d: "HTTP",
+                correct: "c"
+            }
+        ];
+
+        const quiz = document.getElementById("quiz");
+        const countQuestion = document.getElementById("count-question");
+        const totalQuestions = document.getElementById("total-questions");
+        const questionNumber = document.querySelector(".question-number");
+        const questionTitle = document.getElementById("question");
+        const answerLabels = document.querySelectorAll(".answer-label");
+        const nextBtn = document.getElementById("next-question-btn");
+        const prevBtn = document.getElementById("prev-question-btn");
+        const submitBtn = document.getElementById("submit");
+        const radioInputs = document.querySelectorAll("input[type='radio']");
+        const resultEl = document.getElementById("result");
+        const scoreEl = document.getElementById("score");
+        const timerEl = document.getElementById("timer");
+
+        let currentQuestion = 0;
+        let userAnswers = new Array(quizData.length);
+        let timeLeft = 600; // 10 minutes in seconds
+        let timerInterval;
+
+        // Initialize quiz
+        function loadQuestion() {
+            countQuestion.textContent = currentQuestion + 1;
+            totalQuestions.textContent = quizData.length;
+            questionNumber.textContent = currentQuestion + 1;
+            questionTitle.textContent = quizData[currentQuestion].question;
+
+            answerLabels[0].textContent = quizData[currentQuestion].a;
+            answerLabels[1].textContent = quizData[currentQuestion].b;
+            answerLabels[2].textContent = quizData[currentQuestion].c;
+            answerLabels[3].textContent = quizData[currentQuestion].d;
+
+            // Clear selections
+            radioInputs.forEach(input => input.checked = false);
+
+            // Restore previous answer if exists
+            if (userAnswers[currentQuestion] !== undefined) {
+                document.querySelector(`input[value="${userAnswers[currentQuestion]}"]`).checked = true;
+            }
+
+            // Update button visibility
+            prevBtn.style.display = currentQuestion > 0 ? "block" : "none";
+            nextBtn.style.display = currentQuestion < quizData.length - 1 ? "block" : "none";
+            submitBtn.style.display = currentQuestion === quizData.length - 1 ? "block" : "none";
+        }
+
+        // Start the timer
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timeUp();
+                }
+            }, 1000);
+        }
+
+        // Update timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            // Change color when time is running low
+            if (timeLeft <= 60) {
+                timerEl.style.backgroundColor = "#ff6b81";
+            }
+            if (timeLeft <= 30) {
+                timerEl.style.backgroundColor = "#ff4757";
+            }
+        }
+
+        // Handle time up
+        function timeUp() {
+            alert("Time's up! Your quiz will be automatically submitted.");
+            submitQuiz();
+        }
+
+        // Get selected answer
+        function getSelected() {
+            let answer;
+            radioInputs.forEach(input => {
+                if (input.checked) answer = input.value;
+            });
+            return answer;
+        }
+
+        // Next button click handler
+        nextBtn.addEventListener("click", () => {
+            const answer = getSelected();
+            if (!answer) {
+                alert("Please select an answer before proceeding.");
+                return;
+            }
+
+            userAnswers[currentQuestion] = answer;
+            currentQuestion++;
+            loadQuestion();
+        });
+
+        // Previous button click handler
+        prevBtn.addEventListener("click", () => {
+            const answer = getSelected();
+            if (answer) {
+                userAnswers[currentQuestion] = answer;
+            }
+            currentQuestion--;
+            loadQuestion();
+        });
+
+        // Submit button click handler
+        submitBtn.addEventListener("click", submitQuiz);
+
+        // Submit quiz function
+        async function submitQuiz() {
+            const answer = getSelected();
+            if (answer) {
+                userAnswers[currentQuestion] = answer;
+            }
+
+            // Stop the timer
+            clearInterval(timerInterval);
+
+            // Prepare data for submission
+            const questionsForSubmission = quizData.map((q, index) => ({
+                question: q.question,
+                correctAnswer: q.correct
+            }));
+
+            // Disable button during submission
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Submitting...";
+
+            try {
+                const response = await fetch('/api/assessment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        subject: 'mnst',
+                        answers: userAnswers,
+                        questions: questionsForSubmission
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Show success message
+                    quiz.style.display = "none";
+                    resultEl.style.display = "block";
+                    scoreEl.innerHTML = `
+                        <h3>Assessment Submitted Successfully!</h3>
+                        <p>Your score: ${result.score}/${result.totalQuestions} (${result.percentage}%)</p>
+                        <p>View your <a href="/view">results dashboard</a> for details.</p>
+                    `;
+                } else {
+                    alert("Submission failed: " + (result.error || "Unknown error"));
+                }
+            } catch (error) {
+                console.error("Error submitting assessment:", error);
+                alert("Failed to submit. Please try again.");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Submit Now";
+            }
+        }
+
+        // Initialize quiz
+        loadQuestion();
+        startTimer();
+    </script>
+</body>
+
+</html>

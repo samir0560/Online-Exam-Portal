@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --accent-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --dark-color: #5a5c69;
+            --light-color: #f8f9fc;
+            --sidebar-width: 250px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fc;
+            color: #333;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Navigation Panel */
+        .nav-panel {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--primary-color) 10%, #224abe 100%);
+            color: white;
+            min-height: 100vh;
+            position: fixed;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+
+        .nav-header {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-header h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 1rem 0;
+        }
+
+        .nav-menu li {
+            margin: 0.5rem 0;
+        }
+
+        .nav-menu li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .nav-menu li a:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-menu li a i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-menu li.active a {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            border-left: 3px solid white;
+        }
+
+        /* Content Area */
+        .content-area {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: white;
+            border-radius: 0.35rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-header h3 {
+            font-size: 1.25rem;
+            color: var(--dark-color);
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-color), #224abe);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .detail-label i {
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 0.35rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            margin-right: 1rem;
+        }
+
+        .stat-info h4 {
+            font-size: 1rem;
+            color: var(--dark-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-info p {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #5a5c69;
+        }
+
+        /* Subjects Section */
+        .subjects-container {
+            background: white;
+            border-radius: 0.35rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            padding: 1.5rem;
+        }
+
+        .subjects-container p {
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+
+        .subject-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .subject-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 0.35rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .subject-btn:hover {
+            background: #224abe;
+            transform: translateY(-2px);
+        }
+
+        .subject-btn i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Results Section */
+        .results-container {
+            background: white;
+            border-radius: 0.35rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            padding: 1.5rem;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .results-header h3 {
+            color: var(--dark-color);
+        }
+
+        .result-filter select {
+            padding: 0.5rem;
+            border-radius: 0.35rem;
+            border: 1px solid #d1d3e2;
+            background-color: white;
+            color: #6e707e;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e3e6f0;
+        }
+
+        th {
+            background-color: #f8f9fc;
+            color: var(--dark-color);
+            font-weight: 700;
+        }
+
+        .percentage-bar {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.35rem;
+            font-size: 0.75rem;
+            text-align: center;
+            min-width: 50px;
+        }
+
+        .view-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.35rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-btn:hover {
+            background: #224abe;
+        }
+
+        .no-results {
+            text-align: center;
+            color: var(--dark-color);
+            padding: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-panel {
+                width: 70px;
+            }
+
+            .nav-header h2,
+            .nav-menu li span {
+                display: none;
+            }
+
+            .nav-menu li a {
+                justify-content: center;
+                padding: 1rem 0;
+            }
+
+            .nav-menu li a i {
+                margin-right: 0;
+                font-size: 1.25rem;
+            }
+
+            .content-area {
+                margin-left: 70px;
+                padding: 1rem;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .question-details {
+            margin-top: 1rem;
+        }
+
+        .question-result {
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border-left: 4px solid;
+        }
+
+        .question-result.correct {
+            border-color: var(--secondary-color);
+            background: rgba(28, 200, 138, 0.1);
+        }
+
+        .question-result.incorrect {
+            border-color: var(--danger-color);
+            background: rgba(231, 74, 59, 0.1);
+        }
+
+        .close-modal {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+
+
+        @media (max-width: 576px) {
+            .detail-row {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .subject-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <!-- Left Navigation Panel -->
+        <div class="nav-panel">
+            <div class="nav-header">
+                <h2>Student Portal</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li class="active" id="dashboardBtn">
+                        <a href="#dashboard">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li id="examsBtn">
+                        <a href="#exams">
+                            <i class="fas fa-laptop-code"></i>
+                            <span>Online Exams</span>
+                        </a>
+                    </li>
+                    <li id="resultsBtn">
+                        <a href="#results">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Results</span>
+                        </a>
+                    </li>
+                    <li id="logoutBtn">
+                        <a href="/logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="content-area">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+
+                <!-- User Profile Card -->
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="avatar">${user.name.charAt(0).toUpperCase()}</div>
+                        <h3>My Profile</h3>
+                    </div>
+                    <div class="profile-details">
+                        <div class="detail-row">
+                            <span class="detail-label"><i class="fas fa-id-card"></i> User ID:</span>
+                            <span id="userId" class="detail-value"></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label"><i class="fas fa-user"></i> Name:</span>
+                            <span id="userName" class="detail-value"></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label"><i class="fas fa-envelope"></i> Email:</span>
+                            <span id="userEmail" class="detail-value"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #4e73df;">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Subjects</h4>
+                            <p>5 Available</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #1cc88a;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Completed</h4>
+                            <p id="completedExams">0 Exams</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #f6c23e;">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Average Score</h4>
+                            <p id="averageScore">0%</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Online Exams Section -->
+            <section id="exams" class="content-section">
+                <h2><i class="fas fa-laptop-code"></i> Online Exams</h2>
+                <div class="subjects-container">
+                    <p>Select a subject to begin your exam:</p>
+                    <div class="subject-buttons">
+                        <a href="/subjects/mnst" class="subject-btn">
+                            <i class="fas fa-shield-alt"></i> MNST
+                        </a>
+                        <a href="/subjects/mc" class="subject-btn">
+                            <i class="fas fa-mobile-alt"></i> MC
+                        </a>
+                        <a href="/subjects/cd" class="subject-btn">
+                            <i class="fas fa-code"></i> CD
+                        </a>
+                        <a href="/subjects/cns" class="subject-btn">
+                            <i class="fas fa-lock"></i> CNS
+                        </a>
+                        <a href="/subjects/ml" class="subject-btn">
+                            <i class="fas fa-brain"></i> ML
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section id="results" class="content-section">
+                <h2><i class="fas fa-chart-bar"></i> Results</h2>
+                <div class="results-container">
+                    <div class="results-header">
+                        <h3>Your Exam History</h3>
+                        <div class="result-filter">
+                            <!-- <select id="subjectFilter">
+                                <option value="all">All Subjects</option>
+                                <option value="mnst">MNST</option>
+                                <option value="mc">MC</option>
+                                <option value="cd">CD</option>
+                                <option value="cns">CNS</option>
+                                <option value="ml">ML</option>
+                            </select> -->
+                        </div>
+                    </div>
+                    <div class="results-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Date</th>
+                                    <th>Score</th>
+                                    <th>Percentage</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsBody">
+                                <!-- Results will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Fetch and display user data
+        async function fetchUserData() {
+            try {
+                const response = await fetch('/api/user');
+                if (!response.ok) throw new Error('Not authorized');
+
+                const user = await response.json();
+
+                // Display user info
+                document.getElementById('userId').textContent = user.userId;
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userEmail').textContent = user.email;
+
+                // Update avatar with user's initial
+                const avatar = document.querySelector('.avatar');
+                avatar.textContent = user.name.charAt(0).toUpperCase();
+
+                // Load assessment history
+                await loadAssessmentHistory();
+
+            } catch (error) {
+                console.error('Error:', error);
+                window.location.href = '/login';
+            }
+        }
+
+        // Load assessment history
+        async function loadAssessmentHistory() {
+            try {
+                const response = await fetch('/api/assessments');
+                if (!response.ok) return;
+
+                const assessments = await response.json();
+                const resultsBody = document.getElementById('resultsBody');
+                resultsBody.innerHTML = '';
+
+                if (assessments.length > 0) {
+                    // Update stats
+                    document.getElementById('completedExams').textContent = `${assessments.length} Exams`;
+
+                    const average = assessments.reduce((sum, a) => sum + a.percentage, 0) / assessments.length;
+                    document.getElementById('averageScore').textContent = `${Math.round(average)}%`;
+
+                    // Populate results table
+                    assessments.forEach(assessment => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${assessment.subject.toUpperCase()}</td>
+                            <td>${new Date(assessment.submittedAt).toLocaleDateString()}</td>
+                            <td>${assessment.score}/${assessment.totalQuestions}</td>
+                            <td>
+                                <div class="percentage-bar" style="width: ${assessment.percentage}%">
+                                    ${assessment.percentage}%
+                                </div>
+                            </td>
+                           `;
+                        resultsBody.appendChild(row);
+                    });
+                } else {
+                    resultsBody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="no-results">No exam results found</td>
+                        </tr>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading history:', error);
+            }
+        }
+
+        // Navigation handling
+        function setupNavigation() {
+            const navItems = document.querySelectorAll('.nav-menu li');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            navItems.forEach(item => {
+                if (item.id !== 'logoutBtn') {
+                    item.addEventListener('click', (e) => {
+                        e.preventDefault();
+
+                        // Update active nav item
+                        navItems.forEach(navItem => navItem.classList.remove('active'));
+                        item.classList.add('active');
+
+                        // Show corresponding section
+                        const target = item.querySelector('a').getAttribute('href');
+                        contentSections.forEach(section => {
+                            section.classList.remove('active');
+                            if (section.id === target.substring(1)) {
+                                section.classList.add('active');
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        // Initialize filter
+        function setupFilter() {
+            const filter = document.getElementById('subjectFilter');
+            filter.addEventListener('change', async () => {
+                // In a real app, you would filter results here
+                console.log('Filter changed to:', filter.value);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchUserData();
+            setupNavigation();
+            setupFilter();
+        });
+    </script>
+</body>
+
+</html>
